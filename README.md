@@ -2,27 +2,37 @@
 A simple guide to install mxnet on a MBP using OSX 10.11
 
 ## check your MBP's GPU
-make sure a NVIDIA discrete GPU card is on your MBP; w/o it, you only can expect running mxnet on CPU
+
+Make sure a **NVIDIA discrete GPU card**, e.g., GTX 750M, is on your MBP; w/o it, you only can expect running mxnet on CPU.
 
 ## CUDA 7.5 and cuDNN V3
 
+follow official instructions
+
 ## compile mxnet C++
 
-Keep in mind,
+On OSX, need update config.mk as follows
 - using clang, not gcc
-- blas; using Apple
-
-Copy the provided config.mk file to the root-dir of the mxnet and then
-
+- installing openblas through brew; using apple
+- based on [this issue report](https://github.com/dmlc/mxnet/issues/728#issuecomment-160867057), need setup
 ```bash
-make -j4
+ADD_LDFLAGS += -Xlinker -F/Library/Frameworks -Xlinker -framework -Xlinker CUDA
 ```
 
-## install mxnet-R package 
+Copy the provided **config.mk** file to the root-dir of the mxnet and then run make command
+
+
+## install mxnet-R package
 - follow this to disable
 - make sure R is > 3.2
-- LD_LIBRARY_PATH
+- have these path setups
+```bash
+# 12/2/2015
+# for mxnet-R
+export LD_LIBRARY_PATH=/usr/local/cuda/lib:$LD_LIBRARY_PATH
+export DYLD_FALLBACK_LIBRARY_PATH=.:/usr/local/cuda/lib:$DYLD_FALLBACK_LIBRARY_PATH
+```
 - using installation from the source
 - for **RStudio**, please start it from terminal so that the mxnet package can be loaded
 
-Using lenet.R to test running on both CPU and GPU
+Using the provided **lenet.R** to test running on both CPU and GPU
